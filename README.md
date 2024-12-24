@@ -14,24 +14,45 @@ sort -nr: 排序由高到低。
 head -n 1: 第一個則為次數最多的字。
 ```
 
-- Example : How to use
+- How to use:
 ```
 
 ➜  Question1 git:(master) ✗ ls
 count_words.sh words.txt      words2.txt
 
+chmod +x ./count_words.sh
+
+# 統計輸入為words.txt 與words2.txt
 ➜  Question1 git:(master) ✗ ./count_words.sh -f ./words2.txt
   18 the
-
 ➜  Question1 git:(master) ✗ ./count_words.sh -f ./words.txt
    4 twinkle
 
 # 如果沒有指定 input file path:
-
  ➜  Question1 git:(master) ✗ ./count_words.sh
 Please specific your file path
 
 i.e: Usage: count_words.sh -f ./words.txt
 	 -f: Your file Path
+
+```
+
+# asiayo_share
+# Question 2:  Terraform EKS + K8S
+- Terraform Build EKS ：
+```
+terraform init
+terrafrom plan
+
+# 模擬結果：
+terraform plan -out tf.plan
+terraform show -no-color tf.plan > tfplan.txt
+
+```
+
+- K8S Yaml ：
+```
+mysql-sts.yaml
+asiayo-svc.yaml
 
 ```

@@ -1,0 +1,106 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: asiayo-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  rules:
+  - host: asiayo.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: asiayo-service
+            port:
+              number: 80 
+  tls:
+  - hosts:
+    - asiayo.com
+    secretName: asiayo-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: asiayo-service
+  namespace: default
+  labels:
+    app: asiayo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    name: http
+  selector:
+    app: asiayo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: asiayo
+  namespace: default
+  labels:
+    app: asiayo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: asiayo
+  template:
+    metadata:
+      labels:
+        app: asiayo
+    spec:
+      containers:
+      - name: banyandb
+        image: asiayo-ecr/asiayo:1.0.0
+        ports:
+        - name: http
+          containerPort: 80
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: ebs-pvc-asiayo
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ebs-pv-asiayo
+  namespace: default
+  labels:
+    app: ebs-pv-asiayo
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ebs-sc
+  awsElasticBlockStore:
+    volumeID: "vol-xxxxxxxxx"
+    fsType: ext4
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ebs-pvc-asiayo
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: ebs-sc
+  selector:
+    matchLabels:
+      app: ebs-pv-asiayo
