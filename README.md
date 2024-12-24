@@ -37,7 +37,6 @@ i.e: Usage: count_words.sh -f ./words.txt
 
 ```
 
-# asiayo_share
 # Question 2:  Terraform EKS + K8S
 - Terraform Build EKS ：
 ```
@@ -52,7 +51,22 @@ terraform show -no-color tf.plan > tfplan.txt
 
 - K8S Yaml ：
 ```
-mysql-sts.yaml
+# asiayo service: 
 asiayo-svc.yaml
 
+# mysql cluster (對mysql 不熟，參考網路其他)
+1: 採用StatefulSet ,確保 keep 狀態資料 pod reboot 時會mount 到原本storage .
+2: 透過init-container 產生server id ,將cluster server id (master/slave) 寫入mysql設定檔
+
+mysql-sts.yaml
+mysql-config.yaml
 ```
+
+# Question 3:  SQL
+- SQL query ：
+```
+sqlquery.sql
+```
+
+# Question 4:  Scenario
+- Folder : Question4
