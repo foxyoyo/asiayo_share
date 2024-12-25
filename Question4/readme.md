@@ -13,6 +13,11 @@ Ans :
     3.1 :  如果有突然流量，或超乎預期的流量，可設定HPA 或 整合 KEDA應用等方式 。
     3.2 :  除了 api , frontend 這些pods 的AutoScaling 外，其他架構上components 是否能應對？ i.e : Redis memory 提前加大， RDS spec 是否需暫時升級。
     3.3 :  需要關注的monitor metrics ， redis:mem , swap .  http avg response time 等等，RDS iops ,slow log 等等。 
+
+4: Change EKS ASG Worker node cronjob :
+   docker buildx build --platform=linux/amd64  -f ./Dockerfile -t foxyo/cronjob-chg-asg:latest .
+   modiy cronjob_for_asg_worker.yaml for ENV: MaxNode , MinNode, schedule time 
+
 ```
 
 # 試想有一個 API 伺服器集群，背後由多台機器組成，此時服務監控系統發現其中一台回應時間經常逾時，僅有此機器異常，請簡易描述你/妳將會如何進行問題排查？考量的細節是什麼？
